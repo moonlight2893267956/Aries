@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * 消费者向提供者发送的请求对象
@@ -41,5 +42,9 @@ public class RpcRequest implements Serializable {
      * 是否是心跳包
      */
     private Boolean heartBeat;
+
+    public static RpcRequest heart() {
+        return new RpcRequest(UUID.randomUUID().toString(), null, null, new Object[0], new Class[0], true);
+    }
 
 }

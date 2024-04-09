@@ -2,9 +2,9 @@ package org.dragon.aries.core.serialize;
 
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dragon.aries.common.exception.SerializeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 public class HessianSerializer implements CommonSerializer {
 
-    private static final Logger logger = LoggerFactory.getLogger(HessianSerializer.class);
+    private static final Logger logger = LogManager.getLogger(HessianSerializer.class);
     public final static int SERIALIZE_CODE = 2;
 
     @Override

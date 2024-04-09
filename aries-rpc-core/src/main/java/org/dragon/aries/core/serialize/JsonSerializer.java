@@ -2,10 +2,10 @@ package org.dragon.aries.core.serialize;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dragon.aries.common.entity.RpcRequest;
 import org.dragon.aries.common.exception.SerializeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class JsonSerializer implements CommonSerializer {
 
-    private static final Logger logger = LoggerFactory.getLogger(JsonSerializer.class);
+    private static final Logger logger = LogManager.getLogger(JsonSerializer.class);
     public final static int SERIALIZE_CODE = 1;
 
     private ObjectMapper objectMapper = new ObjectMapper();

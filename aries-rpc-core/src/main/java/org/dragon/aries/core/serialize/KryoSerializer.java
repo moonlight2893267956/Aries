@@ -3,11 +3,11 @@ package org.dragon.aries.core.serialize;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dragon.aries.common.entity.RpcRequest;
 import org.dragon.aries.common.entity.RpcResponse;
 import org.dragon.aries.common.exception.SerializeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
  */
 public class KryoSerializer implements CommonSerializer {
 
-    private static final Logger logger = LoggerFactory.getLogger(KryoSerializer.class);
+    private static final Logger logger = LogManager.getLogger(KryoSerializer.class);
     public final static int SERIALIZE_CODE = 0;
 
     private static final ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(() -> {

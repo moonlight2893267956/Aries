@@ -3,19 +3,19 @@ package org.dragon.aries.core.protocal.netty.codec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dragon.aries.common.entity.RpcRequest;
 import org.dragon.aries.common.entity.RpcResponse;
 import org.dragon.aries.common.enumeration.PackageType;
 import org.dragon.aries.common.exception.RpcError;
 import org.dragon.aries.common.exception.RpcException;
 import org.dragon.aries.core.serialize.CommonSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class CommonDecoder extends ReplayingDecoder {
-    private static final Logger logger = LoggerFactory.getLogger(CommonDecoder.class);
+    private static final Logger logger = LogManager.getLogger(CommonDecoder.class);
     private static final int MAGIC_NUMBER = 0xCAFEBABE;
 
     @Override
