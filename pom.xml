@@ -12,6 +12,7 @@
         <module>aries-rpc-core</module>
         <module>aries-rpc-client-starter</module>
         <module>aries-rpc-server-starter</module>
+        <module>aries-rpc-common</module>
     </modules>
 
     <properties>
@@ -28,17 +29,22 @@
             <dependency>
                 <groupId>org.dragon.aries</groupId>
                 <artifactId>aries-rpc-core</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${module.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.dragon.aries</groupId>
                 <artifactId>aries-rpc-client-starter</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${module.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.dragon.aries</groupId>
                 <artifactId>aries-rpc-server-starter</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${module.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dragon.aries</groupId>
+                <artifactId>aries-rpc-common</artifactId>
+                <version>${module.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
