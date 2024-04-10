@@ -1,13 +1,14 @@
 package org.dragon.aries.core.protocal;
 
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import io.netty.channel.Channel;
+import org.dragon.aries.common.entity.RpcRequest;
+import org.dragon.aries.common.entity.RpcResponse;
 
 public abstract class RpcStarter {
-    private final static Logger log = LogManager.getLogger(RpcStarter.class);
-    public void start() {
-        start("localhost", 8888);
+    public Channel start() {
+        return start("localhost", 8888);
     }
-    public abstract void start(String host, int port);
+    public abstract Channel start(String host, int port);
+    public abstract RpcResponse<?> send(RpcRequest request);
 }

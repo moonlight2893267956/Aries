@@ -37,6 +37,10 @@ public class RpcRequest implements Serializable {
      * 调用方法的参数类型
      */
     private Class<?>[] paramTypes;
+    /**
+     * 版本号
+     */
+    private String version;
 
     /**
      * 是否是心跳包
@@ -44,7 +48,11 @@ public class RpcRequest implements Serializable {
     private Boolean heartBeat;
 
     public static RpcRequest heart() {
-        return new RpcRequest(UUID.randomUUID().toString(), null, null, new Object[0], new Class[0], true);
+        return new RpcRequest(UUID.randomUUID().toString(), null, null, new Object[0], new Class[0], null, true);
+    }
+
+    public static String randomRequestId() {
+        return UUID.randomUUID().toString();
     }
 
 }

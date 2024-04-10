@@ -1,5 +1,6 @@
 package org.dragon.aries.common.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dragon.aries.common.enumeration.ResponseCode;
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class RpcResponse<T> implements Serializable {
 
     /**
@@ -31,6 +33,10 @@ public class RpcResponse<T> implements Serializable {
      * 响应数据
      */
     private T data;
+
+    public static RpcResponse<Object> heart(String requestId) {
+        return new RpcResponse(requestId, ResponseCode.HEART.getCode(), ResponseCode.HEART.getMessage(), null);
+    }
 
     public static <T> RpcResponse<T> success(T data, String requestId) {
         RpcResponse<T> response = new RpcResponse<>();

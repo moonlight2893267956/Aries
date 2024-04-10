@@ -24,6 +24,8 @@ public enum RpcError {
     SERIALIZER_NOT_FOUND("找不到序列化器"),
     RESPONSE_NOT_MATCH("响应与请求号不匹配"),
     FAILED_TO_CONNECT_TO_SERVICE_REGISTRY("连接注册中心失败"),
+    NO_PERMISSIONS_TO_INVOKE("无权限执行服务"),
+    REQUEST_TIMEOUT("服务调用超时"),
     REGISTER_SERVICE_FAILED("注册服务失败");
 
     private final String message;

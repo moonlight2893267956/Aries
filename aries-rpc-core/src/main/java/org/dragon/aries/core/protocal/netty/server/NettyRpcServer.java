@@ -7,8 +7,11 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dragon.aries.common.entity.RpcRequest;
+import org.dragon.aries.common.entity.RpcResponse;
 import org.dragon.aries.core.protocal.RpcStarter;
 import org.dragon.aries.core.protocal.netty.codec.CommonDecoder;
 import org.dragon.aries.core.protocal.netty.codec.CommonEncoder;
@@ -32,7 +35,7 @@ public class NettyRpcServer extends RpcStarter {
     }
 
     @Override
-    public void start(String host, int port) {
+    public Channel start(String host, int port) {
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
@@ -41,8 +44,9 @@ public class NettyRpcServer extends RpcStarter {
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel socketChannel) throws Exception {
+                    protected void initChannel(SocketChannel socketChannel) {
                         ChannelPipeline pipeline = socketChannel.pipeline();
+                        pipeline.addLast(new IdleStateHandler(5, 0, 0));
                         pipeline.addLast(new CommonEncoder(serializable));
                         pipeline.addLast(new CommonDecoder());
                         pipeline.addLast(new RpcMessageServerHandler());
@@ -50,13 +54,16 @@ public class NettyRpcServer extends RpcStarter {
                 });
         ChannelFuture bind = bootstrap.bind(new InetSocketAddress(host, port));
         log.info("[NettyRpcServer] Server started at {}:{}", host, port);
-        bind.channel().closeFuture().addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                log.warn("[NettyRpcServer] Server stopped");
-                bossGroup.shutdownGracefully();
-                workerGroup.shutdownGracefully();
-            }
+        bind.channel().closeFuture().addListener((ChannelFutureListener) channelFuture -> {
+            log.warn("[NettyRpcServer] Server stopped");
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
         });
+        return bind.channel();
+    }
+
+    @Override
+    public RpcResponse<?> send(RpcRequest request) {
+        return null;
     }
 }
