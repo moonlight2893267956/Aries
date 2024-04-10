@@ -65,8 +65,13 @@ public class NettyRpcClient extends RpcStarter {
     }
 
     public RpcResponse<?> send(RpcRequest request) {
-        handler.cacheRequest(request.getRequestId(), new DefaultResponseFuture());
-        channel.writeAndFlush(request);
+        if (channel.isWritable()) {
+            try {
+                channel.writeAndFlush(request).sync();
+            } catch (InterruptedException e) {
+                throw new RpcException("[NettyRpcClient]网络数据写入异常");
+            }
+        }
         return handler.getResponse(request.getRequestId());
     }
 }

@@ -3,6 +3,7 @@ package org.dragon.aries.common.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.dragon.aries.common.enumeration.ResponseCode;
 
 import java.io.Serializable;
@@ -54,4 +55,13 @@ public class RpcResponse<T> implements Serializable {
         return response;
     }
 
+    @Override
+    public String toString() {
+        return "RpcResponse{" +
+                "requestId='" + requestId + '\'' +
+                ", statusCode=" + statusCode +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

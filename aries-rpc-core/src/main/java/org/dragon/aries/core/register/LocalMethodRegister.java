@@ -1,6 +1,6 @@
 package org.dragon.aries.core.register;
 
-import org.apache.logging.log4j.LogManager;
+import  org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dragon.aries.common.entity.bo.RpcRegisterInterface;
 import org.dragon.aries.common.utils.HashKit;

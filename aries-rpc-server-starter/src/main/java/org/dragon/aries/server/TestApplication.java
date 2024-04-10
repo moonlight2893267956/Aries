@@ -1,21 +1,20 @@
 package org.dragon.aries.server;
 
+import org.dragon.aries.api.entity.Person;
+
 public class TestApplication {
-    public static void main(String[] args) {
-        try {
-            doFun();
-        } catch (RuntimeException e) {
-            System.out.println("e => " + e.getMessage());
-        }
+    public static void main(String[] args) throws NoSuchMethodException {
+        System.out.println(TestApplication.class.getDeclaredMethod("doFun").getReturnType().equals(String.class));
     }
 
-    private static void doFun() throws RuntimeException {
+    private static Object doFun() throws RuntimeException {
         try {
             doFun1();
         } catch (Exception e) {
             System.out.println("dddd");
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     private static void doFun1() throws RuntimeException {

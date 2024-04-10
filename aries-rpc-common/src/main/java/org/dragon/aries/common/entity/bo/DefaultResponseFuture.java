@@ -1,39 +1,36 @@
 package org.dragon.aries.common.entity.bo;
 
 import org.dragon.aries.common.entity.RpcResponse;
-import org.dragon.aries.common.exception.RpcError;
-import org.dragon.aries.common.exception.RpcException;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class DefaultResponseFuture {
-    private RpcResponse<?> response;
-    private volatile boolean done;
-    private ReentrantLock lock;
-    private Condition condition;
+    private volatile RpcResponse<Object> response;
+    private final ReentrantLock lock;
+    private final Condition condition;
+
     public DefaultResponseFuture() {
-        this.done = false;
         lock = new ReentrantLock();
         condition = lock.newCondition();
     }
 
-    public RpcResponse<?> getResponse(Long timeout, TimeUnit unit) {
+    public RpcResponse<Object> getResponse(Long timeout, TimeUnit unit) {
         lock.lock();
-        if (!done) {
-            try {
-                condition.await(timeout, unit);
-            } catch (InterruptedException e) {
-                lock.unlock();
-                throw new RuntimeException(e);
+        try {
+            if (response == null) {
+                condition.await();
             }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            lock.unlock();
         }
-        lock.unlock();
         return response;
     }
 
-    public void setResponse(RpcResponse<?> response) {
+    public void setResponse(RpcResponse<Object> response) {
         lock.lock();
         this.response = response;
         condition.signalAll();

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RpcMessageClientHandler extends ChannelDuplexHandler {
     private final static Logger log = LogManager.getLogger(RpcMessageClientHandler.class);
-    private final Map<String, DefaultResponseFuture> futureMap = new ConcurrentHashMap<String, DefaultResponseFuture>();
+    private final Map<String, DefaultResponseFuture> futureMap = new ConcurrentHashMap<>();
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
@@ -40,12 +40,13 @@ public class RpcMessageClientHandler extends ChannelDuplexHandler {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof RpcResponse) {
-            RpcResponse<?> response = (RpcResponse<?>) msg;
+            RpcResponse<Object> response = (RpcResponse<Object>) msg;
             if (response.getStatusCode().equals(ResponseCode.HEART.getCode())) {
-//                log.info("[RpcClientHandler] heart success");
                 return;
             }
             log.info("[RpcClientHandler] 接受接口调用响应：{} ", response);
+            DefaultResponseFuture future = this.futureMap.get(response.getRequestId());
+            future.setResponse(response);
         }
     }
 
@@ -60,17 +61,13 @@ public class RpcMessageClientHandler extends ChannelDuplexHandler {
         }
     }
 
-    public void cacheRequest(String requestId, DefaultResponseFuture future) {
-        futureMap.put(requestId, future);
-    }
-
-    public RpcResponse<?> getResponse(String requestId) {
+    public RpcResponse<Object> getResponse(String requestId) {
         DefaultResponseFuture future = futureMap.get(requestId);
         if (future == null) {
             log.error("[RpcClientHandler] requestId:{} not found", requestId);
             return null;
         }
-        RpcResponse<?> response = future.getResponse(5l, TimeUnit.SECONDS);
+        RpcResponse<Object> response = future.getResponse(5L, TimeUnit.SECONDS);
         futureMap.remove(requestId);
         if (response == null) {
             log.error("[RpcClientHandler] requestId:{} timeout", requestId);
