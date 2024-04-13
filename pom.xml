@@ -24,6 +24,11 @@
         <netty-version>4.1.50.Final</netty-version>
         <logging.log4j.version>2.13.0</logging.log4j.version>
         <jackson.version>2.11.2</jackson.version>
+        <zookeeper.version>3.5.6</zookeeper.version>
+        <kryo.version>4.0.2</kryo.version>
+        <hessian.version>4.0.63</hessian.version>
+        <protostuff.version>1.7.2</protostuff.version>
+        <lombok.version>1.18.12</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -54,6 +59,33 @@
                 <artifactId>aries-rpc-api</artifactId>
                 <version>${module.version}</version>
             </dependency>
+            <!--zookeeper-->
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
+            </dependency>
+            <!--序列化工具类-->
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>kryo</artifactId>
+                <version>${kryo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.caucho</groupId>
+                <artifactId>hessian</artifactId>
+                <version>${hessian.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -62,7 +94,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>${lombok.version}</version>
         </dependency>
 
         <!-- Log4j2日志记录框架 -->

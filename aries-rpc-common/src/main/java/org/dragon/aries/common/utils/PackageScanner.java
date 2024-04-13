@@ -4,26 +4,24 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 public class PackageScanner {
-    public static List<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> annotationClass)
+    public static Set<Class<?>> getAnnotatedClasses(String packageName, Class<? extends Annotation> annotationClass)
             throws ClassNotFoundException {
-        List<Class<?>> annotatedClasses = new ArrayList<>();
+        Set<Class<?>> annotatedClasses = new HashSet<>();
         String packagePath = packageName.replace('.', '/');
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources;
         try {
-            loadClass(packageName, annotationClass, classLoader, packagePath, annotatedClasses);
+            loadClass(packageName, annotationClass, classLoader, packagePath, annotatedClasses, 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return annotatedClasses;
     }
 
-    private static void loadClass(String packageName, Class<? extends Annotation> annotationClass, ClassLoader classLoader, String packagePath, List<Class<?>> annotatedClasses) throws IOException, ClassNotFoundException {
+    private static void loadClass(String packageName, Class<? extends Annotation> annotationClass, ClassLoader classLoader, String packagePath, Set<Class<?>> annotatedClasses, int i) throws IOException, ClassNotFoundException {
         Enumeration<URL> resources;
         resources = classLoader.getResources(packagePath);
         while (resources.hasMoreElements()) {
@@ -42,7 +40,7 @@ public class PackageScanner {
                                     annotatedClasses.add(clazz);
                                 }
                             } else {
-                                loadClass(packageName + "." + fileName, annotationClass, classLoader, packagePath + "/" + fileName, annotatedClasses);
+                                loadClass(packageName + "." + fileName, annotationClass, classLoader, packagePath + "/" + fileName, annotatedClasses, ++i);
                             }
                         }
                     }

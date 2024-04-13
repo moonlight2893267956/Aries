@@ -7,6 +7,7 @@ import org.dragon.aries.common.utils.HashKit;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class LocalMethodRegister implements RpcRegister<RpcRegisterInterface> {
     private final static Logger log = LogManager.getLogger(LocalMethodRegister.class);
@@ -29,5 +30,9 @@ public class LocalMethodRegister implements RpcRegister<RpcRegisterInterface> {
     @Override
     public Object getInstance(RpcRegisterInterface data) {
         return this.interfaceRelInstance.get(HashKit.sha512(data.getInterfaceName() + "_" + data.getVersion()));
+    }
+
+    @Override
+    public void start() {
     }
 }
