@@ -22,9 +22,4 @@ public abstract class MethodRpcRegister implements RpcRegister<String, Object> {
         return interfaceRelInstance.get(key);
     }
 
-    public Object getInstance(String interfaceName, String version) {
-        String key = HashKit.sha512(interfaceName + "_" + version);
-        return getInstance(key);
-    }
-
 }

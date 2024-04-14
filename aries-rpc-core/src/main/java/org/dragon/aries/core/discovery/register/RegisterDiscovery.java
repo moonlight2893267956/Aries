@@ -1,11 +1,11 @@
-package org.dragon.aries.core.discovery.service;
+package org.dragon.aries.core.discovery.register;
 
 import org.dragon.aries.core.discovery.Discovery;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class ServiceDiscovery implements Discovery {
+public abstract class RegisterDiscovery implements Discovery {
     protected Map<String, Class<?>> services;
     public Class<?> getService(String className) {
         if (services == null) {

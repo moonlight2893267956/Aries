@@ -1,4 +1,4 @@
-package org.dragon.aries.core.discovery.service;
+package org.dragon.aries.core.discovery.register;
 
 import org.dragon.aries.common.annotation.AriesService;
 import org.dragon.aries.common.utils.PackageScanner;
@@ -6,11 +6,11 @@ import org.dragon.aries.common.utils.PackageScanner;
 import java.util.Map;
 import java.util.Set;
 
-public class AriesServiceDiscovery extends ServiceDiscovery {
+public class AriesRegisterDiscovery extends RegisterDiscovery {
     private final String basePackage;
     public static final String VERSION_SPLIT = "/";
 
-    public AriesServiceDiscovery(String basePackage) {
+    public AriesRegisterDiscovery(String basePackage) {
         this.basePackage = basePackage;
     }
 

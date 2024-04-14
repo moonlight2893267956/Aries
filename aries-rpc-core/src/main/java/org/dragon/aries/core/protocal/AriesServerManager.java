@@ -6,7 +6,7 @@ import org.dragon.aries.common.entity.bo.RpcRegisterInterface;
 import org.dragon.aries.common.entity.bo.RpcRegisterService;
 import org.dragon.aries.common.exception.RegisterException;
 import org.dragon.aries.common.fatory.SingletonFactory;
-import org.dragon.aries.core.discovery.service.AriesServiceDiscovery;
+import org.dragon.aries.core.discovery.register.AriesRegisterDiscovery;
 import org.dragon.aries.core.protocal.netty.server.NettyRpcServer;
 import org.dragon.aries.core.register.method.LocalMethodRegister;
 import org.dragon.aries.core.register.service.ZookeeperServiceRegister;
@@ -33,14 +33,14 @@ public class AriesServerManager {
     }
 
     private static void register(String host, Integer port, String registerPath) throws ClassNotFoundException, RegisterException, InstantiationException, IllegalAccessException {
-        AriesServiceDiscovery discovery = new AriesServiceDiscovery(registerPath);
+        AriesRegisterDiscovery discovery = new AriesRegisterDiscovery(registerPath);
         discovery.discovery();
-        SingletonFactory.registerInstance(AriesServiceDiscovery.class, discovery);
+        SingletonFactory.registerInstance(AriesRegisterDiscovery.class, discovery);
         ZookeeperServiceRegister register = new ZookeeperServiceRegister(host, port);
         LocalMethodRegister methodRegister = SingletonFactory.getInstance(LocalMethodRegister.class);
         for (Map.Entry<String, Class<?>> entry : discovery.getServices().entrySet()) {
             String key = entry.getKey();
-            int index = key.lastIndexOf(AriesServiceDiscovery.VERSION_SPLIT);
+            int index = key.lastIndexOf(AriesRegisterDiscovery.VERSION_SPLIT);
             String serviceName = key.substring(0, index);
             String version = key.substring(index + 1);
 
