@@ -1,22 +1,20 @@
 package org.dragon.aries.server;
 
-import org.dragon.aries.api.service.HelloService;
-import org.dragon.aries.common.entity.bo.RpcRegisterInterface;
-import org.dragon.aries.common.fatory.SingletonFactory;
-import org.dragon.aries.core.protocal.RpcStarter;
-import org.dragon.aries.core.protocal.netty.server.NettyRpcServer;
-import org.dragon.aries.core.register.LocalMethodRegister;
-import org.dragon.aries.core.serialize.JsonSerializer;
-import org.dragon.aries.server.service.HelloServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.dragon.aries.common.annotation.AriesScan;
+import org.dragon.aries.common.exception.RegisterException;
+import org.dragon.aries.core.protocal.AriesServerManager;
+import org.dragon.aries.server.common.SocketConstant;
 
+@AriesScan(basePackages = "org.dragon.aries")
 public class RpcServerStarter {
+    private final static Logger log = LogManager.getLogger(RpcServerStarter.class);
 
-    public static void main(String[] args) {
-        // 服务注册
-        LocalMethodRegister register = SingletonFactory.getInstance(LocalMethodRegister.class);
-        register.register(RpcRegisterInterface.builder().interfaceName(HelloService.class.getName()).version("v0.1").instance(new HelloServiceImpl()).build());
-
-        RpcStarter rpcServer = new NettyRpcServer(new JsonSerializer());
-        rpcServer.start();
+    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, RegisterException {
+        boolean start = AriesServerManager.start(RpcServerStarter.class, SocketConstant.host, SocketConstant.port);
+        if (start) {
+            log.info("[RpcServerStarter] Server started successfully");
+        }
     }
 }

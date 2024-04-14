@@ -1,11 +1,9 @@
 package org.dragon.aries.core.protocal.netty.handler;
 
-import org.dragon.aries.common.entity.bo.RpcRegisterInterface;
 import org.dragon.aries.common.exception.RpcError;
 import org.dragon.aries.common.exception.RpcException;
 import org.dragon.aries.common.fatory.SingletonFactory;
-import org.dragon.aries.core.register.LocalMethodRegister;
-import org.dragon.aries.core.register.RpcRegister;
+import org.dragon.aries.core.register.method.LocalMethodRegister;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,8 +22,8 @@ public class RpcMethodHandler {
         } catch (NoSuchMethodException e) {
             throw new RpcException(RpcError.SERVICE_INVOCATION_FAILURE);
         }
-        RpcRegister<RpcRegisterInterface> register = SingletonFactory.getInstance(LocalMethodRegister.class);
-        Object instance = register.getInstance(RpcRegisterInterface.builder().interfaceName(interfaceName).version(version).build());
+        LocalMethodRegister register = SingletonFactory.getInstance(LocalMethodRegister.class);
+        Object instance = register.getInstance(interfaceName, version);
         if (instance == null) {
             throw new RpcException(RpcError.SERVICE_NOT_FOUND);
         }

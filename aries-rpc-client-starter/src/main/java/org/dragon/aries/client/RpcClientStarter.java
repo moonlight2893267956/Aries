@@ -11,7 +11,7 @@ public class RpcClientStarter {
 
     public static void main(String[] args) {
         RpcStarter rpcStarter = new NettyRpcClient(new JsonSerializer());
-        rpcStarter.start();
+        rpcStarter.start("localhost", 8889);
 
         HelloService helloService = new RpcProxyFactory(rpcStarter).createProxy(HelloService.class);
         System.out.println(helloService.sayHello("wuxiangyi"));

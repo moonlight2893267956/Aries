@@ -21,10 +21,10 @@ public class RpcMessageServerHandler extends ChannelInboundHandlerAdapter {
 
             // 如果服务端接受心跳包则回写一个心跳包给客户端
             if (request.getHeartBeat()) {
-//                log.info("心跳包接收成功，当前时刻：{}", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
                 ctx.writeAndFlush(RpcResponse.heart(request.getRequestId()));
                 return;
             }
+
             log.info("接受数据包：{}", request);
             RpcMethodHandler handler = SingletonFactory.getInstance(RpcMethodHandler.class);
             ObjectMapper mapper = SingletonFactory.getInstance(ObjectMapper.class);
