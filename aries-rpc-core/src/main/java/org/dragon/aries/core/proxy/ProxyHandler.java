@@ -3,7 +3,10 @@ package org.dragon.aries.core.proxy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dragon.aries.common.entity.RpcRequest;
+import org.dragon.aries.common.entity.RpcResponse;
 import org.dragon.aries.common.entity.Socket;
+import org.dragon.aries.common.enumeration.ResponseCode;
+import org.dragon.aries.common.exception.RpcException;
 import org.dragon.aries.common.fatory.SingletonFactory;
 import org.dragon.aries.core.discovery.service.ZookeeperServiceDiscover;
 import org.dragon.aries.core.protocal.RpcStarter;
@@ -33,10 +36,14 @@ public class ProxyHandler implements InvocationHandler {
         Class<?>[] paramTypes = method.getParameterTypes();
         String methodName = method.getName();
         RpcRequest rpcRequest = new RpcRequest(RpcRequest.randomRequestId(), interfaceName, methodName, args, paramTypes, version, false);
+        RpcResponse<?> response = rpcStarter.send(rpcRequest);
+        if (response.getStatusCode().equals(ResponseCode.FAIL.getCode())) {
+            throw new RpcException("[ProxyHandler] remote service handler fail");
+        }
         if (method.getReturnType().equals(String.class)) {
-            return rpcStarter.send(rpcRequest).getData().toString().replaceAll("^\"|\"$", "");
+            return response.getData().toString().replaceAll("^\"|\"$", "");
         }
         ObjectMapper mapper = SingletonFactory.getInstance(ObjectMapper.class);
-        return mapper.readValue(rpcStarter.send(rpcRequest).getData().toString(), method.getReturnType());
+        return mapper.readValue(response.getData().toString(), method.getReturnType());
     }
 }

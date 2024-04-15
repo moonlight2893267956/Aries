@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dragon.aries.common.entity.RpcRequest;
 import org.dragon.aries.common.entity.RpcResponse;
+import org.dragon.aries.common.enumeration.ResponseCode;
 import org.dragon.aries.common.fatory.SingletonFactory;
 
 public class RpcMessageServerHandler extends ChannelInboundHandlerAdapter {
@@ -33,6 +34,8 @@ public class RpcMessageServerHandler extends ChannelInboundHandlerAdapter {
                 invoke = handler.handleMethod(request.getInterfaceName(), request.getMethodName(), request.getParameters(), request.getParamTypes(), request.getVersion());
             } catch (RuntimeException e) {
                 log.info("[RpcMessageServerHandler]处理失败，失败原因：{}", e.toString());
+                e.printStackTrace();
+                ctx.writeAndFlush(RpcResponse.fail(ResponseCode.FAIL, request.getRequestId()));
             }
 
             /**

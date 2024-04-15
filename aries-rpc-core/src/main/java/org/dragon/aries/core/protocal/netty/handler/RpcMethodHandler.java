@@ -1,5 +1,6 @@
 package org.dragon.aries.core.protocal.netty.handler;
 
+import org.dragon.aries.common.entity.RpcResponse;
 import org.dragon.aries.common.exception.RpcError;
 import org.dragon.aries.common.exception.RpcException;
 import org.dragon.aries.common.fatory.SingletonFactory;
@@ -28,6 +29,7 @@ public class RpcMethodHandler {
             throw new RpcException(RpcError.SERVICE_NOT_FOUND);
         }
         Object invoke;
+//        RpcResponse<?> response = new RpcResponse();
         try {
             invoke = declaredMethod.invoke(instance, params);
         } catch (IllegalAccessException e) {
