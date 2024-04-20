@@ -21,7 +21,7 @@ public class SingletonFactory {
         return clazz.cast(o);
     }
 
-    public static <T> void registerInstance(Class<T> clazz, T instance) {
+    public static <T> void registerInstance(Class<?> clazz, T instance) {
         cache.put(clazz, instance);
     }
 }

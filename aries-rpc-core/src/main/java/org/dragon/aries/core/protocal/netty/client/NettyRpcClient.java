@@ -13,7 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dragon.aries.common.entity.RpcRequest;
 import org.dragon.aries.common.entity.RpcResponse;
-import org.dragon.aries.common.entity.bo.DefaultResponseFuture;
 import org.dragon.aries.common.exception.RpcException;
 import org.dragon.aries.core.protocal.RpcStarter;
 import org.dragon.aries.core.protocal.netty.codec.CommonDecoder;
@@ -29,7 +28,7 @@ public class NettyRpcClient extends RpcStarter {
     private final Bootstrap bootstrap;
     private final CommonSerializer serializer;
     private Channel channel;
-    private RpcMessageClientHandler handler;
+    private final RpcMessageClientHandler handler;
 
     public NettyRpcClient(CommonSerializer serializer) {
         this.bootstrap = new Bootstrap();
@@ -41,19 +40,8 @@ public class NettyRpcClient extends RpcStarter {
     @Override
     public Channel start(String host, int port) {
         try {
-            channel = bootstrap.group(this.workGroup)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel socketChannel) {
-                            ChannelPipeline pipeline = socketChannel.pipeline();
-                            pipeline.addLast(new IdleStateHandler(5, 3, 0));
-                            pipeline.addLast(new CommonEncoder(serializer));
-                            pipeline.addLast(new CommonDecoder());
-                            pipeline.addLast(handler);
-                        }
-                    }).connect(new InetSocketAddress(host, port))
-                    .sync().channel();
+            // netty 客户端开启监听
+            doListen(host, port);
         } catch (InterruptedException e) {
             throw new RpcException("[NettyRpcClient]服务端连接失败");
         }
@@ -62,6 +50,22 @@ public class NettyRpcClient extends RpcStarter {
             workGroup.shutdownGracefully();
         });
         return channel;
+    }
+
+    private void doListen(String host, int port) throws InterruptedException {
+        channel = bootstrap.group(this.workGroup)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel socketChannel) {
+                        ChannelPipeline pipeline = socketChannel.pipeline();
+                        pipeline.addLast(new IdleStateHandler(5, 3, 0));
+                        pipeline.addLast(new CommonEncoder(serializer));
+                        pipeline.addLast(new CommonDecoder());
+                        pipeline.addLast(handler);
+                    }
+                }).connect(new InetSocketAddress(host, port))
+                .sync().channel();
     }
 
     public RpcResponse<?> send(RpcRequest request) {

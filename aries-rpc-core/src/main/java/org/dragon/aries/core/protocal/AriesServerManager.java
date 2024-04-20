@@ -23,7 +23,7 @@ public class AriesServerManager {
             register(host, port, registerPath);
         }
 
-        // 启动 Netty 务端
+        // 启动 Netty 服务端
         new Thread(() -> {
             RpcStarter rpcServer = new NettyRpcServer(new JsonSerializer());
             rpcServer.start(new Socket(host, port));
