@@ -12,8 +12,7 @@ import java.io.IOException;
 @Data
 public class ZookeeperConfiguration {
     private final static Logger log = LogManager.getLogger(ZookeeperConfiguration.class);
-//    public String zkServer = "k8s-master:2181,k8s-slave1:2181,k8s-slave2:2181";
-public String zkServer = "k8s-master:2181,k8s-node1:2181,k8s-node2:2181";
+    public String zkServer = "k8s-master:2181,k8s-slave1:2181,k8s-slave2:2181";
     public Integer sessionTimeout = 10000;
     public void config() throws RegisterException {
         try {

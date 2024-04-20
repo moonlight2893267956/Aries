@@ -2,7 +2,6 @@ package org.dragon.aries.server;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.data.Stat;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,5 +14,7 @@ public class TestApplication {
         ZooKeeper zooKeeper = new ZooKeeper(zkServer, sessionTimeout, null);
         List<String> children = zooKeeper.getChildren("/aries/service/org.dragon.aries.api.service.SayService/default", null);
         System.out.println(children);
+
+        String str = "hello";
     }
 }
