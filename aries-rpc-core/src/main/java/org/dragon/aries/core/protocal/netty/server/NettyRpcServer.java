@@ -63,7 +63,7 @@ public class NettyRpcServer extends RpcStarter {
     }
 
     @Override
-    public RpcResponse<?> send(RpcRequest request) {
+    public RpcResponse<?> send(RpcRequest request, Long timeout) {
         return null;
     }
 }

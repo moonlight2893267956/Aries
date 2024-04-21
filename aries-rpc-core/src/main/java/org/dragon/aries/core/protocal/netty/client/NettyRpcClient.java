@@ -68,7 +68,7 @@ public class NettyRpcClient extends RpcStarter {
                 .sync().channel();
     }
 
-    public RpcResponse<?> send(RpcRequest request) {
+    public RpcResponse<?> send(RpcRequest request, Long timeout) {
         if (channel.isWritable()) {
             try {
                 channel.writeAndFlush(request).sync();
@@ -76,6 +76,6 @@ public class NettyRpcClient extends RpcStarter {
                 throw new RpcException("[NettyRpcClient]网络数据写入异常");
             }
         }
-        return handler.getResponse(request.getRequestId());
+        return handler.getResponse(request.getRequestId(), timeout);
     }
 }

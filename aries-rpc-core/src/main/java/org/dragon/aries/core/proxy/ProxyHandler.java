@@ -1,10 +1,12 @@
 package org.dragon.aries.core.proxy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dragon.aries.common.entity.RpcRequest;
 import org.dragon.aries.common.entity.RpcResponse;
 import org.dragon.aries.common.entity.Socket;
+import org.dragon.aries.common.entity.bo.CommonField;
 import org.dragon.aries.common.enumeration.ResponseCode;
 import org.dragon.aries.common.exception.RpcException;
 import org.dragon.aries.common.fatory.SingletonFactory;
@@ -18,18 +20,22 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 public class ProxyHandler implements InvocationHandler {
-    private final String version;
+    private final static Logger log = LogManager.getLogger(ProxyHandler.class);
+    private final CommonField field;
 
-    public ProxyHandler(String version) {
-        this.version = version;
+    public ProxyHandler(CommonField field) {
+        this.field = field;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         try {
             String interfaceName = method.getDeclaringClass().getName();
+            int retry = field.getRetry();
+            long retryInterval = field.getRetryInterval();
+            long timeout = field.getTimeout();
             ZookeeperServiceDiscover discover = new ZookeeperServiceDiscover(new RobinLoadBalance());
-            discover.discovery(interfaceName, version);
+            discover.discovery(interfaceName, field.getVersion());
             Socket socket = discover.getSocket();
 
             RpcStarter rpcStarter = new NettyRpcClient(new JsonSerializer());
@@ -37,19 +43,26 @@ public class ProxyHandler implements InvocationHandler {
 
             Class<?>[] paramTypes = method.getParameterTypes();
             String methodName = method.getName();
-            RpcRequest rpcRequest = new RpcRequest(RpcRequest.randomRequestId(), interfaceName, methodName, args, paramTypes, version, false);
-            RpcResponse<?> response = rpcStarter.send(rpcRequest);
-            if (response.getStatusCode().equals(ResponseCode.FAIL.getCode())) {
-                throw new RpcException("[ProxyHandler] remote service handler fail");
+            RpcRequest rpcRequest = new RpcRequest(RpcRequest.randomRequestId(), interfaceName, methodName, args, paramTypes, field.getVersion(), false);
+
+            RpcResponse<?> response = rpcStarter.send(rpcRequest, timeout);
+            while (response == null || response.getStatusCode().equals(ResponseCode.FAIL.getCode())) {
+                log.error("[ProxyHandler] remote service handler fail, having retry count {}", retry);
+                if (retry == 0) {
+                    throw new RpcException("[ProxyHandler] remote service handler fail");
+                }
+                retry --;
+                Thread.sleep(retryInterval);
+                response = rpcStarter.send(rpcRequest, timeout);
             }
+
             if (method.getReturnType().equals(String.class)) {
                 return response.getData().toString().replaceAll("^\"|\"$", "");
             }
             ObjectMapper mapper = SingletonFactory.getInstance(ObjectMapper.class);
             return mapper.readValue(response.getData().toString(), method.getReturnType());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RpcException("[ProxyHandler] remote service handler fail, message " + e.getMessage());
         }
-        return null;
     }
 }

@@ -26,7 +26,6 @@
             <groupId>org.dragon.aries</groupId>
             <artifactId>aries-rpc-api</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

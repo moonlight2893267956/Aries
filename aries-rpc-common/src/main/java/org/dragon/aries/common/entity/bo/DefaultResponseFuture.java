@@ -20,7 +20,7 @@ public class DefaultResponseFuture {
         lock.lock();
         try {
             if (response == null) {
-                condition.await();
+                condition.await(timeout, unit);
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

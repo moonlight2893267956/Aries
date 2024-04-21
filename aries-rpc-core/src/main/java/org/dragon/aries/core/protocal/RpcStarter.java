@@ -11,5 +11,5 @@ public abstract class RpcStarter {
         return start(socket.getHost(), socket.getPort());
     }
     public abstract Channel start(String host, int port);
-    public abstract RpcResponse<?> send(RpcRequest request);
+    public abstract RpcResponse<?> send(RpcRequest request, Long timeout);
 }

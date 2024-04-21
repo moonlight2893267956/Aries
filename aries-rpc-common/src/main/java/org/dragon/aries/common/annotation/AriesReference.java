@@ -9,4 +9,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AriesReference {
     String version() default "default";
+
+    int retry() default 0;
+
+    long retryInterval() default 0;
+
+    long timeout() default 2000;
 }

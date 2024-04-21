@@ -7,7 +7,7 @@ import org.dragon.aries.common.annotation.AriesReference;
 
 @AriesComponent
 public class RpcClientService {
-    @AriesReference(version = "v0.1")
+    @AriesReference(version = "v0.1", retry = 1, retryInterval = 2000, timeout = 2000)
     private HelloService helloService;
 
     public void remoteProxy() {

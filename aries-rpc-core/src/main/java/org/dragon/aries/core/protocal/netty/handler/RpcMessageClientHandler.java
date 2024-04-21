@@ -61,13 +61,13 @@ public class RpcMessageClientHandler extends ChannelDuplexHandler {
         }
     }
 
-    public RpcResponse<Object> getResponse(String requestId) {
+    public RpcResponse<Object> getResponse(String requestId, Long timeout) {
         DefaultResponseFuture future = futureMap.get(requestId);
         if (future == null) {
             log.error("[RpcClientHandler] requestId:{} not found", requestId);
             return null;
         }
-        RpcResponse<Object> response = future.getResponse(5L, TimeUnit.SECONDS);
+        RpcResponse<Object> response = future.getResponse(timeout, TimeUnit.MILLISECONDS);
         futureMap.remove(requestId);
         if (response == null) {
             log.error("[RpcClientHandler] requestId:{} timeout", requestId);
