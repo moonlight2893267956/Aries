@@ -10,4 +10,5 @@ public class CommonField {
     private int retry;
     private Long retryInterval;
     private Long timeout;
+    private String callback;
 }

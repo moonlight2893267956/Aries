@@ -15,4 +15,6 @@ public @interface AriesReference {
     long retryInterval() default 0;
 
     long timeout() default 2000;
+
+    String callback() default "";
 }

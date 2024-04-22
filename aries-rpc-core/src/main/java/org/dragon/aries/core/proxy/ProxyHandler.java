@@ -1,6 +1,7 @@
 package org.dragon.aries.core.proxy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.netty.util.internal.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dragon.aries.common.entity.RpcRequest;
@@ -34,6 +35,7 @@ public class ProxyHandler implements InvocationHandler {
             int retry = field.getRetry();
             long retryInterval = field.getRetryInterval();
             long timeout = field.getTimeout();
+            String callback = field.getCallback();
             ZookeeperServiceDiscover discover = new ZookeeperServiceDiscover(new RobinLoadBalance());
             discover.discovery(interfaceName, field.getVersion());
             Socket socket = discover.getSocket();
@@ -48,8 +50,10 @@ public class ProxyHandler implements InvocationHandler {
             RpcResponse<?> response = rpcStarter.send(rpcRequest, timeout);
             while (response == null || response.getStatusCode().equals(ResponseCode.FAIL.getCode())) {
                 log.error("[ProxyHandler] remote service handler fail, having retry count {}", retry);
-                if (retry == 0) {
+                if (retry == 0 && StringUtil.isNullOrEmpty(callback)) {
                     throw new RpcException("[ProxyHandler] remote service handler fail");
+                } else if (retry == 0) {
+                    return callback;
                 }
                 retry --;
                 Thread.sleep(retryInterval);

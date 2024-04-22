@@ -55,6 +55,7 @@ public class AriesClientManager {
                         .retry(annotation.retry())
                         .retryInterval(annotation.retryInterval())
                         .timeout(annotation.timeout())
+                        .callback(annotation.callback())
                         .build());
                 Object o = instance.newInstance();
                 declaredField.setAccessible(true);
