@@ -5,10 +5,14 @@ import org.dragon.aries.common.exception.RegisterException;
 import org.dragon.aries.common.fatory.SingletonFactory;
 import org.dragon.aries.core.protocal.AriesClientManager;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 public class RpcClientStarter {
     public static void main(String[] args) throws RegisterException {
         AriesClientManager.start(RpcClientStarter.class);
         RpcClientService instance = SingletonFactory.getInstance(RpcClientService.class);
         instance.remoteProxy();
+
+        ConcurrentHashMap map = new ConcurrentHashMap();
     }
 }

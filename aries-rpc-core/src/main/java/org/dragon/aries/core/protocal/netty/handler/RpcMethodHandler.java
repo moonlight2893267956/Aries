@@ -1,6 +1,5 @@
 package org.dragon.aries.core.protocal.netty.handler;
 
-import org.dragon.aries.common.entity.RpcResponse;
 import org.dragon.aries.common.exception.RpcError;
 import org.dragon.aries.common.exception.RpcException;
 import org.dragon.aries.common.fatory.SingletonFactory;
